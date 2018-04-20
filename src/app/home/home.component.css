@@ -1,0 +1,11 @@
+.center-logo {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+.navigate {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}

@@ -1,0 +1,17 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.form-enter {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.title {
+  margin-bottom: 30px;
+}
+
+.form-enter input{
+  margin-bottom: 10px;
+}

@@ -1,0 +1,11 @@
+<div class="form-enter">
+  <h2 class="form-signin-heading title">User Registration</h2>
+
+  <label for="inputEmail" class="sr-only">Email address</label>
+  <input [(ngModel)]="user['email']" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" type="email">
+  
+  <label for="inputPassword" class="sr-only">Password</label>
+  <input (keyup.enter)="signUp()" [(ngModel)]="user['password']" id="inputPassword" class="form-control" placeholder="Password" required="" type="password">
+  
+  <button class="btn btn-lg btn-primary btn-block" (click)="signUp()">Sign Up</button>
+</div>

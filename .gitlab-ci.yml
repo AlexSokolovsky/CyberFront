@@ -1,0 +1,61 @@
+stages:
+    - test
+    - build
+    - deploy
+
+ng_lint:
+  image: node:8.9-alpine
+  stage: test
+  before_script:
+    - npm install --unsafe-perm -g @angular/cli -qq
+    - npm install
+  script:
+    - ng lint
+  cache:
+    key: $CI_PROJECT_NAME
+    paths:
+      - node_modules/
+
+build_image:
+  image: docker:latest
+  services:
+    - docker:dind
+  stage: build
+  before_script:
+    - cp ./src/environments/environment.ts ./src/environments/environment.prod.ts
+    - docker build -f Dockerfile-build . -t nodejs:$CI_COMMIT_REF_SLUG
+    - docker run --name node_temp nodejs:$CI_COMMIT_REF_SLUG /bin/true
+    - docker cp node_temp:/app/dist ./sources
+    - docker rm node_temp
+  script:
+    - docker build . -t $CI_PROJECT_NAMESPACE:$CI_PROJECT_NAME
+    - rm -rf sources/
+    - docker tag $CI_PROJECT_NAMESPACE:$CI_PROJECT_NAME $DOCKER_REGISTRY/cyberbeaconfront:$CI_COMMIT_SHA
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $DOCKER_REGISTRY
+    - docker push $DOCKER_REGISTRY/cyberbeaconfront:$CI_COMMIT_SHA
+  cache:
+    key: $CI_PROJECT_NAME
+    paths:
+      - node_modules/
+    policy: pull
+
+deploy:
+  image: alpine:latest
+  stage: deploy
+  when: on_success
+  environment: 
+    name: staging
+    url: http://beacon.cybergizer.com
+  before_script:
+    - apk update && apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 400 ~/.ssh/id_rsa
+    - ssh-add ~/.ssh/id_rsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  script:
+    - ssh $HOST 'export IMAGE_CYBERBEACON_FRONTEND='"'$DOCKER_REGISTRY/cyberbeaconfront:$CI_COMMIT_SHA'"' && '"'$DEPLOY_PATH'"' && docker ps'
+  only:
+    - master
+    - development

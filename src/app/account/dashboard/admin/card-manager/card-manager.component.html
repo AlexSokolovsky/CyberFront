@@ -1,0 +1,37 @@
+<div class="card_manager">
+  <h2 class="title">Card Management</h2>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{successMessage}}
+  </div>
+  <tabset>
+    <tab heading='Add Card To User'>
+      <div class="select_item col-md-4">
+        <label>
+          Select Card
+          <select [(ngModel)]="selectedCardId">
+            <option></option>
+            <option *ngFor="let card of cards" [value]="card.id" >{{card.name}}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="select_item col-md-4">
+        <label>
+          Select User
+          <select [(ngModel)]="selectedUserId">
+            <option></option>
+            <option *ngFor="let user of users_online" [value]="user.id" >{{user['email']}}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="select_item col-md-4">
+        <button class="btn btn-primary btn-block" [disabled]="checkAssoc()" (click)="associateCard()">Associate card with user</button>
+        <button class="btn btn-danger btn-block" (click)="destroyAssociates()">Destroy all associaties</button>
+      </div>
+    </tab>
+    <tab heading='Create new card'>
+      <app-new-card></app-new-card>
+    </tab>
+  </tabset>
+</div>

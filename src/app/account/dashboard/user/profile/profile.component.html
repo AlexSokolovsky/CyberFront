@@ -1,0 +1,59 @@
+<div class="container">
+  <app-user-menu [currentUser]= currentUser ></app-user-menu>
+  <hr>
+  <div class="info_box">
+    <div class="col-md-4">
+      <div class="avatar">
+        <img id="main_avatar" src="{{ avatarUrl ? avatarUrl : 'https://povestka.by/wp-content/themes/povestka/img/memory/no-photo.jpg'}}" alt="">
+      </div>
+      
+    </div>
+    <div class="col-md-8">
+      <div class="user_info">
+        <h2 class="title">User info</h2>
+        <table class="table table-striped">
+          <tbody>
+            <tr *ngFor="let field of fields">
+              <td>{{keyFormater(field)}}</td>
+              <td>{{profileData[field] ? profileData[field] : '-'}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <button style="float: right;" *ngIf="checkAccess()" (click)="editProfileWindow(wnd)" class="btn btn-primary">Edit Profile</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #wnd>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">User Profile Edit</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="First_Name">First Name</label>
+      <input type="text" [(ngModel)]="profileData['first_name']" class="form-control" id="First_Name" placeholder="First Name">
+    </div>
+    <div class="form-group">
+      <label for="Last_Name">Last Name</label>
+      <input type="text" [(ngModel)]="profileData['last_name']" class="form-control" id="Last_Name" placeholder="Last Name">
+    </div>
+    <div class="form-group">
+      <label for="Gender">Gender</label>
+      <input type="text" [(ngModel)]="profileData['gender']" class="form-control" id="Gender" placeholder="Gender">
+    </div>
+    <div class="form-group">
+      <label for="Siteurl">Site url</label>
+      <input type="text" [(ngModel)]="profileData['site_url']" value="dsfsd" class="form-control" id="Siteurl" placeholder="Site url">
+    </div>
+    <div class="form-group">
+      <label for="avatar">Avatar Image</label>
+      <input type="file" #avatar (change)="load(avatar)">
+    </div>
+    
+    <button type="submit" (click)="updateProfile()" class="btn btn-success">Submit</button>
+  </div>
+</ng-template>

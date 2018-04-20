@@ -1,0 +1,8 @@
+FROM node:8.9-alpine
+RUN npm install --unsafe-perm -g @angular/cli -qq
+WORKDIR /app
+COPY package*.json /app/
+RUN npm install -qq
+COPY . .
+RUN ng build --prod --sm
+RUN rm -rf node_modules/

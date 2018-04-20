@@ -1,0 +1,142 @@
+<div class="container">
+  <app-user-menu [currentUser]= currentUser ></app-user-menu>
+  <button (click)="logOut()" type="button" class="btn btn-default" aria-label="Left Align">
+    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+  </button>
+  <hr>
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <span style="padding-top: 8px; padding-bottom: 6px; float: left;">Card: {{currentUser['card'] ? currentUser['card']['id'] : "You have not card"}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="left_position">
+          <span style="padding-top: 8px; float: left;">Connection: {{appConnected ? "Appliance was connected !" : " Appliance not connected"}}</span>
+        </div>
+        <div>
+          <img *ngIf="connectionState.connectLoading" src="../assets/images/connection.gif" class="center-logo loading_spin">
+          <button [disabled]="currentUser['card'] === null" (click)="checkApplianceStatus()" *ngIf="connectionState.connectBtnStatus" class="btn btn-small btn-primary right_position">
+            <span class="glyphicon glyphicon-new-window"></span>
+            Connect
+          </button>
+          <button class="dissable_connection_button" (click)="stopCheckConnect()" *ngIf="checkConnect"><span class="glyphicon glyphicon-remove"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="title_inspector col-md-12">
+  <hr>
+  <h4 style="padding-left: 20px;" class="title">Store inspector / <a style="cursor: pointer;" (click)="switchInspector()">{{inspectorStatus ? 'Hide' : 'Show'}}</a></h4>
+  <hr>
+</div>
+
+  <div class="inspector_box_wrapper" *ngIf="inspectorStatus">
+    <div class="col-md-8 inspector_box">
+      <ul class="inspect_list">
+        <li *ngFor="let key of defaultStoreKeys()" class="store_key_value"><span class="store-key">{{key}}</span>: {{store.default[key] | json}} :{{showTypeOfValue(store.default[key])}}</li>
+      </ul>
+      <hr>
+    </div>
+    <div class="col-md-4 add_item_to_store">
+      <hr>
+      <input type="text" #key class="form-control inspector_input" placeholder="key">
+      <input type="text" #value class="form-control inspector_input" placeholder="value">
+      <button class="btn btn-primary" (click)="addKeyValue(key, value)">Add</button>
+    </div>
+  </div>
+  <hr>
+
+  <div class="control-panel">
+    <div class="left_panel col-md-8">
+      <div ace-editor
+      [(text)]="text"
+      style="min-height: 200px; width:100%; overflow: auto;"
+      [options]="options"
+      [theme]="'eclipse'"></div>
+      <hr>
+
+      <div class="navigation_panel">
+        <div class="left_panel left_position">
+          <button class="btn btn-primary" (click)="loadSnippets(show_snippets)"> Load code </button>
+          <button class="btn btn-success" (click)="saveSnippWindow(save_snipp)"> Save as </button>
+          <button class="btn btn-info" *ngIf="checkSnippet(selectedSnippet)" (click)="updateCode()"> Save </button>
+          <button class="btn btn-danger" *ngIf="checkSnippet(selectedSnippet)" (click)="deleteSnippet(selectedSnippet['id'])"> Delete </button>
+        </div>
+        <div class="right_panel right_position">
+          <button [disabled]="!appConnected" class="btn btn-primary" *ngIf="runCodeButtonStatus"  (click)="runCode()"> Run </button>      
+          <button class="btn btn-danger" *ngIf="!runCodeButtonStatus" (click)="stopCode()"> Stop </button>
+        </div>
+      </div>
+      <hr>
+      <p class="console_title">Return value</p>
+      <div class="console_panel">
+        {{result}}
+      </div>
+    </div>
+    <div class="right_panel col-md-4">
+      <div class="app_state">
+        <h4 class="title">Appliance State</h4>
+        Available PINS
+        <p>{{this.app_state['available_pins'] ? this.app_state['available_pins'] : '...'}}</p>
+        <hr>
+        Input PINS
+        <p>{{this.app_state['input_pins'] ? this.app_state['input_pins'] : '...'}}</p>
+      </div>
+
+      <div class="console_panel app_console">
+        <h4 class="title">Appliance log</h4>
+        <ul class="console_list" *ngIf="messages.length > 0">
+          <li *ngFor="let message of messages;">{{message | json}}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<ng-template #save_snipp>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Create new snippet</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="First_Name">Title of snippet</label>
+      <input type="text" [(ngModel)]="snippetTitle" class="form-control" id="First_Name" placeholder="Title">
+    </div>
+
+    <div *ngIf="postSnippetsErrors.length > 0" class="errors_list">
+      <div *ngFor="let error of postSnippetsErrors" class="alert alert-danger">
+        {{error}}
+      </div>
+    </div>
+    
+    <button (click)="postSnippet()" class="btn btn-success">Save snippet</button>
+  </div>
+</ng-template>
+
+<ng-template #show_snippets>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Your snippets</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="userSnippets.length === 0" class="alert alert-danger">
+      At the moment you don`t have snippets
+    </div>
+    <ul class="snippets_list">
+      <li (click)="selectSnippet(snipp)" class="single_snippet" *ngFor="let snipp of userSnippets">{{snipp.title}}</li>
+    </ul>
+  </div>
+</ng-template>
+
+<toaster-container></toaster-container>

@@ -1,0 +1,16 @@
+nav { margin-top: 15px; }
+nav ul li { cursor: pointer; }
+
+ul.user_list li {
+  padding: 10px 10px 0 10px;
+  list-style: none;
+}
+
+ul.user_list {
+  margin: 0;
+  padding: 0;
+}
+ul.user_list li:hover {
+  background: rgba(0,247,255,0.1);
+  cursor: pointer;
+}

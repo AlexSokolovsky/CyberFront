@@ -1,0 +1,9 @@
+<div class="header clearfix">
+  <nav>
+    <ul class="nav nav-pills pull-right">
+      <li><a routerLink="/user">Applicance</a></li>
+      <li><a (click)="toProfile()">Profile</a></li>
+    </ul>
+  </nav>
+  <h3 class="text-muted">Hello, {{ currentUser['email'] }}</h3>
+</div>

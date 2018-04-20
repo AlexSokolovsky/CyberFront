@@ -1,0 +1,23 @@
+  <p>{{successMessage}}</p>
+
+<div class="new_card">
+  <div class="col-md-5">
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">
+        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+      </span>
+      <input class="form-control" type="text" placeholder="Enter Rfid key" [(ngModel)]="card['rfid']">
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">
+        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+      </span>
+      <input class="form-control" type="text" placeholder="Name of card" [(ngModel)]="card['name']">
+    </div>
+  </div>
+  <div class="col-md-2">
+    <button class="btn btn-success btn-block" [disabled]="checkStatus()" (click)="createCard()">Create</button>
+  </div>
+</div>

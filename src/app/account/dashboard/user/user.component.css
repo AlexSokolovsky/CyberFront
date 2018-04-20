@@ -1,0 +1,88 @@
+nav { margin-top: 15px; }
+nav ul li { cursor: pointer; }
+
+.console_panel {
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 10px;
+  min-height: 200px;
+  overflow: scroll;
+  max-height: 220px
+}
+
+.console_title {
+  padding-bottom: 10px;
+}
+
+ul.console_list {
+  margin: 0;
+  padding: 0;
+}
+
+ul.console_list li {
+  margin-bottom: 20px;
+  padding-left: 10px;
+  border-left: 1px dashed black;
+  list-style: none;
+}
+
+.app_state {
+  overflow: scroll;
+  max-height: 220px;
+  max-width: 100%;
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 10px;
+  margin-bottom: 30px;
+}
+
+.app_console {
+  min-height: 313px;
+}
+
+.left_position { float: left; }
+.right_position { float: right; }
+.loading_spin {
+  float: right;
+  width: 100px;
+  margin: 11px;
+}
+
+.inspector_box{
+  overflow: scroll;
+  max-width: 100%;
+}
+.inspect_list, .snippets_list{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.store_key_value, .single_snippet {
+  margin-bottom: 2px;
+  border-left: 3px solid #93bcff;
+  padding: 5px 20px;
+  cursor: default;
+}
+.store_key_value:hover, .single_snippet:hover {
+  border-left: 3px solid #93bcff;
+  background: rgba(147,188,255,0.3);
+}
+.store-key {
+  text-decoration: underline;
+}
+.add_item_to_store {
+  margin-bottom: 20px;
+}
+.inspector_input {
+  margin-bottom: 10px;
+}
+.snippets_list { margin:20px 0; }
+.single_snippet { cursor: pointer; }
+
+.navigation_panel {
+  overflow: hidden;
+}
+
+.dissable_connection_button {
+  border: none;
+  padding-top: 8px;
+  padding-left: 21px;
+}
